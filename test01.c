@@ -2,11 +2,6 @@
 #include <string.h>
 
 #define MAX 1000
-
-/* =========================
-   Node Stack
-   ใช้หา Parent ของ C
-   ========================= */
 typedef struct {
     char data[MAX];
     int top;
@@ -37,11 +32,6 @@ int isNodeStackEmpty(NodeStack *s)
     return s->top == -1;
 }
 
-
-/* =========================
-   Degree Stack
-   ใช้คำนวณ Degree ของแต่ละ Node
-   ========================= */
 typedef struct {
     int data[MAX];
     int top;
@@ -67,11 +57,6 @@ int isDegreeStackEmpty(DegreeStack *s)
     return s->top == -1;
 }
 
-
-/* =========================
-   Counter Stack
-   ใช้หา Children ของ C
-   ========================= */
 typedef struct {
     int data[MAX];
     int top;
@@ -97,10 +82,6 @@ int isCounterStackEmpty(CounterStack *s)
     return s->top == -1;
 }
 
-
-/* =========================
-   Main
-   ========================= */
 int main(void)
 {
     char input[MAX];
@@ -113,16 +94,9 @@ int main(void)
     initDegreeStack(&degreeStack);
     initCounterStack(&counterStack);
 
-    /* =========================
-       รับ Input
-       ========================= */
     printf("트리를 괄호 표기법으로 입력하세요: ");
     scanf("%999s", input);
 
-
-    /* =========================
-       ตัวแปรสำหรับคำนวณ
-       ========================= */
     int totalNodes = 0;
     int leafNodes = 0;
     int nonLeafNodes = 0;
@@ -134,51 +108,37 @@ int main(void)
 
     int valid = 1;
 
-    /* ตรวจสอบ Node ซ้ำ */
     int used[26] = {0};
 
-    /* Parent ของ C */
     char parentOfC = '-';
 
-    /* Children ของ C */
     char childrenOfC[26];
     int cChildCount = 0;
 
-    /* ใช้ควบคุมรูปแบบ */
     int expectNode = 1;
     int afterClose = 0;
 
-
-    /* =========================
-       ตรวจสอบ + คำนวณ
-       Scan String
-       ========================= */
 
     for (int i = 0; input[i] != '\0' && valid; i++)
     {
         char ch = input[i];
 
-
-        /* =====================
-           ต้องการ Node
-           ===================== */
         if (expectNode)
         {
-            /* ต้องเป็น A-Z */
+            
             if (ch < 'A' || ch > 'Z')
             {
                 valid = 0;
                 break;
             }
 
-            /* Root ต้องเป็น A */
+
             if (i == 0 && ch != 'A')
             {
                 valid = 0;
                 break;
             }
 
-            /* ห้าม Node ซ้ำ */
             if (used[ch - 'A'])
             {
                 valid = 0;
@@ -187,15 +147,9 @@ int main(void)
 
             used[ch - 'A'] = 1;
 
-            /* =================
-               Node Count
-               ================= */
+          
             totalNodes++;
 
-
-            /* =================
-               หา Parent ของ C
-               ================= */
             if (ch == 'C')
             {
                 if (!isNodeStackEmpty(&nodeStack))
@@ -204,10 +158,6 @@ int main(void)
                 }
             }
 
-
-            /* =================
-               หา Children ของ C
-               ================= */
 
             if (!isNodeStackEmpty(&nodeStack))
             {
@@ -219,25 +169,16 @@ int main(void)
             }
 
 
-            /* =================
-               เพิ่ม Degree ของ Parent
-               ================= */
-
             if (!isDegreeStackEmpty(&degreeStack))
             {
                 degreeStack.data[degreeStack.top]++;
             }
 
-            /* Counter Stack */
+            
             if (!isCounterStackEmpty(&counterStack))
             {
                 counterStack.data[counterStack.top]++;
             }
-
-
-            /* =================
-               Depth / Height
-               ================= */
 
             currentDepth++;
 
@@ -246,10 +187,6 @@ int main(void)
                 height = currentDepth;
             }
 
-
-            /* =================
-               Leaf / Non-leaf
-               ================= */
 
             if (input[i + 1] == '(')
             {
@@ -266,40 +203,25 @@ int main(void)
         }
 
 
-        /* =====================
-           หลังจากอ่าน Node
-           ===================== */
+     
         else if (!afterClose)
         {
-            /* Node มี Children */
+         
             if (ch == '(')
             {
-                /*
-                 * Node ตัวก่อนหน้า
-                 * ถูก Push เข้า Node Stack
-                 */
+               
                 pushNode(&nodeStack, input[i - 1]);
 
-                /*
-                 * เริ่มนับ Degree ของ Node
-                 */
                 pushDegree(&degreeStack, 0);
 
-                /*
-                 * เริ่ม Counter
-                 */
                 pushCounter(&counterStack, 0);
 
                 expectNode = 1;
             }
 
-
-            /* เจอ comma */
             else if (ch == ',')
             {
-                /*
-                 * comma ต้องอยู่ภายใน ()
-                 */
+            
                 if (isNodeStackEmpty(&nodeStack))
                 {
                     valid = 0;
@@ -309,9 +231,6 @@ int main(void)
                     expectNode = 1;
                 }
             }
-
-
-            /* เจอ ) */
             else if (ch == ')')
             {
                 if (isNodeStackEmpty(&nodeStack))
@@ -320,10 +239,7 @@ int main(void)
                 }
                 else
                 {
-                    /* =================
-                       Degree ของ Node
-                       ================= */
-
+                   
                     int degree = popDegree(&degreeStack);
 
                     if (degree > treeDegree)
@@ -332,22 +248,10 @@ int main(void)
                     }
 
 
-                    /* =================
-                       Counter Stack
-                       ================= */
-
                     int count = popCounter(&counterStack);
 
-                    /*
-                     * ถ้า Node ที่ปิดคือ C
-                     * count = จำนวนลูกของ C
-                     */
+                  
                     (void)count;
-
-
-                    /* =================
-                       Node Stack
-                       ================= */
 
                     popNode(&nodeStack);
 
@@ -357,18 +261,12 @@ int main(void)
                 }
             }
 
-
-            /* ตัวอักษรอื่น = ผิด */
             else
             {
                 valid = 0;
             }
         }
 
-
-        /* =====================
-           หลังจากเจอ )
-           ===================== */
         else
         {
             if (ch == ',')
@@ -413,11 +311,6 @@ int main(void)
         }
     }
 
-
-    /* =========================
-       ตรวจสอบตอนจบ
-       ========================= */
-
     if (expectNode)
     {
         valid = 0;
@@ -438,11 +331,6 @@ int main(void)
         valid = 0;
     }
 
-
-    /* =========================
-       ถ้า Input ผิด
-       ========================= */
-
     if (!valid)
     {
         printf("\n잘못된 트리 표기법입니다.\n");
@@ -450,11 +338,7 @@ int main(void)
     }
 
 
-    /* =========================
-       Output
-       ========================= */
-
-    printf("\n===== Tree Information =====\n");
+    printf("\n Tree Information :\n");
 
     printf("전체 노드의 수: %d\n", totalNodes);
 
@@ -465,11 +349,6 @@ int main(void)
     printf("트리의 높이: %d\n", height);
 
     printf("트리의 차수: %d\n", treeDegree);
-
-
-    /* =========================
-       Parent of C
-       ========================= */
 
     printf("노드 C의 부모 노드: ");
 
@@ -482,10 +361,6 @@ int main(void)
         printf("%c\n", parentOfC);
     }
 
-
-    /* =========================
-       Children of C
-       ========================= */
 
     printf("노드 C의 자식 노드: ");
 
@@ -507,11 +382,6 @@ int main(void)
 
         printf("\n");
     }
-
-
-    /* =========================
-       Tree แบบนอนซ้าย
-       ========================= */
 
     printf("\n===== Tree =====\n");
 
@@ -536,8 +406,6 @@ int main(void)
 
                 printf("+---%c\n", ch);
             }
-
-            /* ถ้า Node มีลูก */
             if (input[i + 1] == '(')
             {
                 depth++;
