@@ -1,0 +1,36 @@
+Data Size : 1000
+
+Insertion Sort       : 248805 comparisons
+Shell Sort (Original): 14627 comparisons
+Shell Sort (Knuth)   : 13500 comparisons
+
+Data Size : 2000
+
+Insertion Sort       : 1013216 comparisons
+Shell Sort (Original): 36491 comparisons
+Shell Sort (Knuth)   : 32111 comparisons
+
+Data Size : 4000
+
+Insertion Sort       : 4007959 comparisons
+Shell Sort (Original): 84033 comparisons
+Shell Sort (Knuth)   : 77512 comparisons
+
+Data Size : 8000
+
+Insertion Sort       : 15951095 comparisons
+Shell Sort (Original): 197416 comparisons
+Shell Sort (Knuth)   : 175947 comparisons
+
+Data Size : 16000
+
+Insertion Sort       : 63620807 comparisons
+Shell Sort (Original): 507889 comparisons
+Shell Sort (Knuth)   : 439365 comparisons
+
+Data Size : 20000
+
+Insertion Sort       : 99865490 comparisons
+Shell Sort (Original): 621816 comparisons
+Shell Sort (Knuth)   : 572101 comparisons
+
